@@ -1,5 +1,5 @@
 {
-  "path": "https://raw.githubusercontent.com/Henrique-Coder/theanimalapi/main/database/animal-images",
+  "path": "https://cdn.statically.io/gh/Henrique-Coder/theanimalapi-old/main/database/animal-images",
   "animals": {
     "alpaca": {
       "0000001": "/alpaca/alpaca-0000001.jpg",

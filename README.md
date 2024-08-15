@@ -46,7 +46,7 @@ Parameters:
 
 #### Prerequisites
 
-- [Python 3.12.4](https://www.python.org/downloads/release/python-3124) with pip.
+- [Python 3.10.5](https://www.python.org/downloads/release/python-3105) with pip.
 - [Git](https://gitforwindows.org) (optional).
 
 ### Installation from source code

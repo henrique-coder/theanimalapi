@@ -1,26 +1,24 @@
 # Built-in modules
 from http import HTTPStatus
-from io import BytesIO
 from pathlib import Path
 from random import choice
-from typing import *
+from typing import Any, Union, Tuple
 
 # Third-party modules
-from PIL import Image
 from faker import Faker
-from flask import *
+from flask import Flask, jsonify, redirect, render_template, request, Response
 from flask_caching import Cache
 from flask_compress import Compress
 from flask_cors import CORS
 from flask_talisman import Talisman
 from flask_wtf.csrf import CSRFProtect
-from httpx import get, HTTPError
 from orjson import loads as orjson_loads
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Local modules
 from static.data.functions import CacheTools, get_animal_images, get_animal_translations, get_animal_translation
 from static.data.logger import logger
+
 
 # Setup Flask application and debugging mode
 app = Flask(__name__)

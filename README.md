@@ -56,14 +56,14 @@ Parameters:
 git clone https://github.com/henrique-coder/theanimalapi.git
 
 # 2. Change the directory
-cd theanimalapi/web
+cd theanimalapi
 
 # 3. Install the requirements
 pip install -U -r requirements.txt
 
 # 4. Run the web server
-python web.py  # with Python (development)
-gunicorn -b 0.0.0.0:5780 everytoolsapi:app  # with Gunicorn (production)
+python theanimalapi.py  # with Python (development)
+gunicorn -b 0.0.0.0:5780 theanimalapi:app  # with Gunicorn (production)
 ```
 
 ### Contributing

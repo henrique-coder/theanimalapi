@@ -1,13 +1,9 @@
 # Built-in modules
 from typing import Any, Union, Dict
-from http import HTTPStatus
-from pathlib import Path
 
 # Third-party modules
 from faker import Faker
 from flask import request as flask_request
-from httpx import head, HTTPError
-from orjson import loads as orjson_loads
 
 
 # Constants
@@ -30,12 +26,6 @@ class CacheTools:
 
         return flask_request.url
 
-
-def get_animal_images() -> Dict[Any, Any]:
-    return orjson_loads(Path('dynamic', 'animal_images.json').read_bytes())
-
-def get_animal_translations() -> Dict[Any, Any]:
-    return orjson_loads(Path('dynamic', 'animal_translations.json').read_bytes())
 
 def get_animal_translation(translations: Dict[Any, Any], name: str, language: str = None) -> Dict[str, Union[str, int]]:
     if name not in translations:

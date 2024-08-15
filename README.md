@@ -1,7 +1,7 @@
 <h2 align="center">The Animal API</h2>
 
 <p align="center">
-    <img src="static/favicon_1024x.png" alt="favicon" width="64" height="64">
+    <img src="static/favicon_256x.ico" alt="favicon" width="64" height="64">
 </p>
 
 <br>

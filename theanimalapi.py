@@ -127,14 +127,15 @@ def v1_api_search_animal() -> Union[Any, HTTPStatus]:
 
     image_url = f'{url_path}/{input_name}/{input_name}-{input_id}.{image_ext}'
 
-    try:
-        image_response = get(image_url, headers={'User-Agent': fake.user_agent(), 'X-Forwarded-For': fake.ipv4_public()}, timeout=10)
-        image_width, image_height = Image.open(BytesIO(image_response.content)).size
-        image_size = len(image_response.content)
-    except HTTPError:
-        return jsonify({'message': 'Image could not be loaded'}), HTTPStatus.NOT_FOUND
+    # try:
+    #     image_response = get(image_url, headers={'User-Agent': fake.user_agent(), 'X-Forwarded-For': fake.ipv4_public()}, timeout=10)
+    #     image_width, image_height = Image.open(BytesIO(image_response.content)).size
+    #     image_size = len(image_response.content)
+    # except HTTPError:
+    #     return jsonify({'message': 'Image could not be loaded'}), HTTPStatus.NOT_FOUND
+    # 'size': image_size, 'width': image_width, 'height': image_height
 
-    return jsonify({'id': input_id, 'name': input_name, 'translation': get_animal_translation(animal_translations, input_name, input_lang), 'size': image_size, 'width': image_width, 'height': image_height, 'url': image_url}), HTTPStatus.OK
+    return jsonify({'id': input_id, 'name': input_name, 'translation': get_animal_translation(animal_translations, input_name, input_lang), 'url': image_url}), HTTPStatus.OK
 
 
 if __name__ == '__main__':

@@ -39,12 +39,12 @@ def get_animal_translations() -> Dict[Any, Any]:
 
 def get_animal_translation(translations: Dict[Any, Any], name: str, language: str = None) -> Dict[str, Union[str, int]]:
     if name not in translations:
-        return {'error': '404', 'message': 'Animal Not Found'}
+        return {'error': 'Animal not found in the database'}
 
     if language is None:
         language = 'en'
 
     elif language not in translations[name]:
-        return {'message': 'Language Not Found', 'error': HTTPStatus.NOT_FOUND}
+        return {'message': 'Language not found in the database'}
 
-    return {'language': language, 'name': translations[name][language]}
+    return {'name': translations[name][language]}

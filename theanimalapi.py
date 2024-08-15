@@ -62,13 +62,13 @@ fake = Faker()
 
 # Setup API routes
 @app.route('/', methods=['GET'])
-@cache.cached(timeout=86400, make_cache_key=CacheTools.gen_cache_key)
+@cache.cached(timeout=60, make_cache_key=CacheTools.gen_cache_key)
 def index() -> Tuple[Response, HTTPStatus]:
-    return redirect('/docs', code=HTTPStatus.MOVED_PERMANENTLY), HTTPStatus.MOVED_PERMANENTLY
+    return redirect('/docs', code=HTTPStatus.TEMPORARY_REDIRECT), HTTPStatus.TEMPORARY_REDIRECT
 
 
 @app.route('/docs', methods=['GET'])
-@cache.cached(timeout=86400, make_cache_key=CacheTools.gen_cache_key)
+@cache.cached(timeout=60, make_cache_key=CacheTools.gen_cache_key)
 def docs() -> Tuple[str, render_template]:
     return render_template('docs.html'), HTTPStatus.OK
 

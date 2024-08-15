@@ -1,28 +1,26 @@
 # Built-in modules
 from http import HTTPStatus
+from io import BytesIO
 from pathlib import Path
+from random import choice
 from typing import *
 
 # Third-party modules
+from PIL import Image
+from faker import Faker
 from flask import *
 from flask_caching import Cache
 from flask_compress import Compress
 from flask_cors import CORS
 from flask_talisman import Talisman
 from flask_wtf.csrf import CSRFProtect
+from httpx import get, HTTPError
 from orjson import loads as orjson_loads
 from werkzeug.middleware.proxy_fix import ProxyFix
-
-from PIL import Image
-from httpx import get
-from io import BytesIO
-from random import choice
-from typing import Union
 
 # Local modules
 from static.data.functions import CacheTools, get_animal_images, get_animal_translations, get_animal_translation
 from static.data.logger import logger
-
 
 # Setup Flask application and debugging mode
 app = Flask(__name__)
@@ -54,8 +52,12 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 animal_images = get_animal_images()
 animal_translations = get_animal_translations()
 
+# Setup URL path and image extension
 url_path = animal_images['path']
 image_ext = 'jpg'
+
+# Setup Faker module
+fake = Faker()
 
 
 # Setup API routes
@@ -110,6 +112,29 @@ def v1_api_search_animal() -> Union[Any, HTTPStatus]:
     input_name = request.args.get('name')
     input_id = request.args.get('id')
     input_lang = request.args.get('lang')
+
+    if input_name is None:
+        input_name = choice(list(animal_images['animals'].keys()))
+    elif input_name not in animal_images['animals']:
+        return jsonify({'message': 'Animal not found in the database'}), HTTPStatus.NOT_FOUND
+    else:
+        input_name = request.args['name']
+
+    if input_id is None:
+        input_id = choice(list(animal_images['animals'][input_name].keys()))
+    elif not input_id.isnumeric():
+        return jsonify({'message': 'ID not found in the database'}), HTTPStatus.NOT_FOUND
+
+    image_url = f'{url_path}/{input_name}/{input_name}-{input_id}.{image_ext}'
+
+    try:
+        image_response = get(image_url, headers={'User-Agent': fake.user_agent(), 'X-Forwarded-For': fake.ipv4_public()}, timeout=10)
+        image_width, image_height = Image.open(BytesIO(image_response.content)).size
+        image_size = len(image_response.content)
+    except HTTPError:
+        return jsonify({'message': 'Image could not be loaded'}), HTTPStatus.NOT_FOUND
+
+    return jsonify({'id': input_id, 'name': input_name, 'translation': get_animal_translation(animal_translations, input_name, input_lang), 'size': image_size, 'width': image_width, 'height': image_height, 'url': image_url}), HTTPStatus.OK
 
 
 if __name__ == '__main__':

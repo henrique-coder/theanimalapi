@@ -16,7 +16,7 @@ from orjson import loads as orjson_loads
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Local modules
-from static.data.functions import CacheTools, get_animal_images, get_animal_translations, get_animal_translation
+from static.data.functions import CacheTools, get_animal_translation
 from static.data.logger import logger
 
 
@@ -28,7 +28,7 @@ cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 logger.info(f'Flask cache enabled. Cache type: {cache.config["CACHE_TYPE"]}')
 
 # Setup Talisman for security headers
-talisman = Talisman(app, content_security_policy={'default-src': ["'self'", 'https://cdnjs.cloudflare.com'], 'style-src': ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'], 'script-src': ["'self'", 'https://cdnjs.cloudflare.com']})
+talisman = Talisman(app, content_security_policy=None)
 logger.info('Talisman security headers enabled')
 
 # Setup Flask CSRF protection
@@ -47,8 +47,8 @@ logger.info('CORS enabled')
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 # Load the animal data
-animal_images = get_animal_images()
-animal_translations = get_animal_translations()
+animal_images = orjson_loads(Path('dynamic/animal_images.json').read_bytes())
+animal_translations = orjson_loads(Path('dynamic/animal_translations.json').read_bytes())
 
 # Setup URL path and image extension
 url_path = animal_images['path']
@@ -105,7 +105,6 @@ def v1_api_version_function_endpoint(endpoint: str) -> Tuple[Response, HTTPStatu
 
 
 @app.route('/api/v1/search/animal', methods=['GET'])
-@cache.cached(timeout=1, make_cache_key=CacheTools.gen_cache_key)
 def v1_api_search_animal() -> Union[Any, HTTPStatus]:
     input_name = request.args.get('name')
     input_id = request.args.get('id')
@@ -125,14 +124,6 @@ def v1_api_search_animal() -> Union[Any, HTTPStatus]:
 
     image_url = f'{url_path}/{input_name}/{input_name}-{input_id}.{image_ext}'
 
-    # try:
-    #     image_response = get(image_url, headers={'User-Agent': fake.user_agent(), 'X-Forwarded-For': fake.ipv4_public()}, timeout=10)
-    #     image_width, image_height = Image.open(BytesIO(image_response.content)).size
-    #     image_size = len(image_response.content)
-    # except HTTPError:
-    #     return jsonify({'message': 'Image could not be loaded'}), HTTPStatus.NOT_FOUND
-    # 'size': image_size, 'width': image_width, 'height': image_height
-
     return jsonify({'id': input_id, 'name': input_name, 'translation': get_animal_translation(animal_translations, input_name, input_lang), 'url': image_url}), HTTPStatus.OK
 
 
@@ -148,4 +139,4 @@ if __name__ == '__main__':
 
     # Run the web server with the specified configuration
     logger.info(f'Starting web server at {config["flask"]["host"]}:{config["flask"]["port"]}')
-    app.run(debug=True, host=config['flask']['host'], port=config['flask']['port'], threaded=config['flask']['threadedServer'])
+    app.run(debug=False, host=config['flask']['host'], port=config['flask']['port'], threaded=config['flask']['threadedServer'])

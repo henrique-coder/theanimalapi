@@ -6,5 +6,6 @@ flask-cors
 flask-limiter
 flask-talisman
 flask-wtf
+guicorn
 orjson
 werkzeug

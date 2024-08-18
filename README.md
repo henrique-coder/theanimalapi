@@ -30,8 +30,8 @@
 
 Basically, you can access the API through the base API URL and add the parameters you want to use.
 
-- Interactive documentation: https://theanimalapi.pythonanywhere.com/api/docs
-- Base API URL: https://theanimalapi.pythonanywhere.com/api/v1/search/animal
+- Interactive documentation: https://theanimalapi.onrender.com/docs
+- Base API URL: https://theanimalapi.onrender.com/api/v1/search/animal
 
 Parameters:
 
@@ -46,8 +46,8 @@ Parameters:
 
 #### Prerequisites
 
-- [Python 3.10.5](https://www.python.org/downloads/release/python-3105) with pip.
-- [Git](https://gitforwindows.org) (optional).
+- [Python 3.12.4](https://www.python.org/downloads/release/python-3124) with pip.
+- [Git](https://git-scm.com) (optional).
 
 ### Installation from source code
 

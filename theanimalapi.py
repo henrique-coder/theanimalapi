@@ -43,8 +43,8 @@ logger.info('Response compression enabled')
 CORS(app, resources={r'*': {'origins': '*'}})
 logger.info('CORS enabled')
 
-# Fix for Flask behind a reverse proxy
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+# Setup proxy fix for the Flask application
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=1, x_port=1, x_prefix=1)
 
 # Load the animal data
 animal_images = orjson_loads(Path('dynamic/animal_images.json').read_bytes())

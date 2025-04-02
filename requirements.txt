@@ -1,11 +1,5 @@
-faker
-flask
-flask-caching
-flask-compress
-flask-cors
-flask-limiter
-flask-talisman
-flask-wtf
-gunicorn
+fastapi
+jinja2
 orjson
-werkzeug
+pydantic
+uvicorn
